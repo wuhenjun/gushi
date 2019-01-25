@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hewei.happy.mapper.FamousPhraseMapper">
+    <insert id="insertGetKey" useGeneratedKeys="true" keyProperty="id" parameterType="com.hewei.happy.entity.FamousPhrase">
+        INSERT INTO HAPPY_FAMOUS_PHRASE(FAMOUS_PHRASE,
+        AUTHOR,
+        SOURCE,
+        CREATED_DATE,
+        URL
+        )
+        VALUES (
+        #{famousPhrase},
+        #{author},
+        #{source},
+        #{createdDate},
+        #{url}
+        )
+    </insert>
+
+    <select id="getDataById" parameterType="int" resultMap="dataMap">
+        SELECT x.ID,x.FAMOUS_PHRASE,x.AUTHOR,x.SOURCE,y.ID as detailId,y.RESOURCE,y.POETRY_CONTENT,y.TRANSIATION
+         FROM HAPPY_FAMOUS_PHRASE x LEFT JOIN HAPPY_FAMOUS_PHRASE_DETAIL y
+        ON x.ID=y.FAMOUS_PHRASE_ID
+        WHERE x.ID = #{id}
+    </select>
+
+    <resultMap id="dataMap" type="com.hewei.happy.vo.FamousPhraseVO">
+        <result column="ID" jdbcType="INTEGER" property="id" />
+        <result column="FAMOUS_PHRASE" jdbcType="VARCHAR" property="famousPhrase" />
+        <result column="AUTHOR" jdbcType="VARCHAR" property="author" />
+        <result column="SOURCE" jdbcType="VARCHAR" property="source" />
+        <association property="famousPhraseDetail" javaType="com.hewei.happy.entity.FamousPhraseDetail">
+            <result column="detailId" jdbcType="INTEGER" property="id" />
+            <result column="RESOURCE" jdbcType="VARCHAR" property="resource" />
+            <result column="POETRY_CONTENT" jdbcType="VARCHAR" property="poetryContent" />
+            <result column="TRANSIATION" jdbcType="VARCHAR" property="transiation" />
+        </association>
+    </resultMap>
+</mapper>
